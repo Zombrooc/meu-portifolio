@@ -200,12 +200,19 @@
         <label for="imagem">Escolha uma Imagem:</label>
         <input type="file" id="imagem" name="imagem" required />
 
+        <label for="display"> Exibir em: </label>
+        <select name="display" required id="display">
+          <option default value="">Escolha uma opção</option>
+          <option value="portifolio">Portifolio</option>
+          <option value="galeria">Galeria</option>
+          <option value="ambos">Ambos</option>
+        </select>
+
         <button type="submit">Adicionar Imagem</button>
       </form>
 
       <div id="add-image-response"></div>
     </div>
-
-    <script src="../../script.js"></script>
+    <script src="../../script.js" type="text/javascript"></script>
   </body>
 </html>

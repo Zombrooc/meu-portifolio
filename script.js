@@ -1,7 +1,29 @@
-async function loadImages() {
+const getDisplay = () => {
+  const currentUrl = window.location.href;
+
+  console.log(currentUrl);
+
+  let display = undefined;
+
+  if (currentUrl.includes("portifolio")) {
+    display = "portifolio";
+  }
+
+  if (currentUrl.includes("galeria")) {
+    display = "galeria";
+  }
+
+  return display;
+};
+
+async function loadImages(display) {
   try {
-    const response = await fetch("http://localhost:3000/api/imagens");
+    const response = await fetch(
+      `http://localhost:3000/api/imagens?display=${display}`
+    );
     const images = await response.json();
+
+    console.log("Images: ", images);
     const container = document.getElementById("image-container");
 
     const fragment = document.createDocumentFragment(); // Cria um fragmento de documento para otimizar
@@ -44,7 +66,8 @@ const deleteImage = async (imageId) => {
       );
       if (response.ok) {
         alert("Imagem excluída com sucesso!");
-        loadImages(); // Atualiza a lista de imagens na seção #portfolio
+        const display = getDisplay();
+        loadImages(display); // Atualiza a lista de imagens na seção #portfolio
       } else {
         throw new Error("Erro ao excluir imagem");
       }
@@ -177,15 +200,12 @@ const deleteTheme = async (themeId) => {
 //   });
 
 document
+
   .getElementById("add-image-form")
   .addEventListener("submit", function (event) {
     event.preventDefault();
 
     // Manually collect form values
-    const tema = document.getElementById("tema-select").value;
-    const file = document.getElementById("imagem").files;
-
-    console.log(file[0]);
 
     const form = document.querySelector("#add-image-form");
     const formData = new FormData(form);
@@ -204,7 +224,9 @@ document
       .then((response) => response.json())
       .then((data) => {
         alert("Imagem adicionada com sucesso!");
-        loadImages(); // Atualiza a lista de imagens na seção #portfolio
+
+        const display = getDisplay();
+        loadImages(display); // Atualiza a lista de imagens na seção #portfolio
       })
       .catch((error) => {
         console.error("Erro ao adicionar imagem:", error);
@@ -249,5 +271,8 @@ document.addEventListener("DOMContentLoaded", function () {
   console.log("Page Loaded");
   // Função para carregar os temas e imagens ao iniciar a página
   loadThemes();
-  loadImages();
+
+  const display = getDisplay();
+
+  loadImages(display || "ambos");
 });
