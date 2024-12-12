@@ -15,18 +15,18 @@ const getDisplay = () => {
 };
 
 async function loadImages(display) {
+  let url = `http://localhost:3000/api/imagens`;
 
-  if (!display) {
-    display = "ambos"
+  if (display) {
+    url = `http://localhost:3000/api/imagens?display=${display}`;
   }
 
   try {
-    const response = await fetch(
-      `http://localhost:3000/api/imagens?display=${display}`
-    );
+    const response = await fetch(url);
     const images = await response.json();
 
-    const container = document.getElementById("image-container");
+    const container = document.getElementById("add-image-response");
+    container.innerHTML = "";
 
     const fragment = document.createDocumentFragment(); // Cria um fragmento de documento para otimizar
 
@@ -211,10 +211,10 @@ document
 
     const form = document.querySelector("#add-image-form");
     const formData = new FormData(form);
-    
+
     const tema = document.getElementById("tema-select").value;
 
-    formData.append("tema_id",  tema)
+    formData.append("tema_id", tema);
 
     // Call function to submit form data
     // Create an object with form data
