@@ -130,10 +130,11 @@ app.post("/api/imagens", upload.single("imagem"), (req, res) => {
   }
 
   const { tema_id, display } = req.body;
+
   const imageUrl = `http://localhost:3000/uploads/${req.file.filename}`; // URL relativa
 
-  const query = "INSERT INTO imagens (url, tema_id, display) VALUES (?, ?, ?)";
-  db.query(query, [imageUrl, tema_id, display], (err, result) => {
+  
+  db.query("INSERT INTO imagens (url, tema_id, display) VALUES (?, ?, ?)", [imageUrl, tema_id, display], (err, result) => {
     if (err) {
       console.error("Erro ao inserir imagem no banco:", err);
       return res
@@ -151,20 +152,25 @@ app.get("/api/imagens", (req, res) => {
   const queryParams = req.query;
 
   if (queryParams?.display) {
+
+    const {display} = queryParams
+
     db.query(
       "SELECT * FROM imagens WHERE display = ?",
       [display],
       (err, results) => {
         if (err) throw err;
-        res.json(results);
+        return res.json(results);
       }
     );
+  } else {
+    db.query("SELECT * FROM imagens", (err, results) => {
+      if (err) throw err;
+      return res.json(results);
+    });
   }
 
-  db.query("SELECT * FROM imagens", (err, results) => {
-    if (err) throw err;
-    res.json(results);
-  });
+  
 });
 
 // Rota para excluir imagem

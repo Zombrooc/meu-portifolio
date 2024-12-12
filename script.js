@@ -1,9 +1,7 @@
 const getDisplay = () => {
   const currentUrl = window.location.href;
 
-  console.log(currentUrl);
-
-  let display = undefined;
+  let display = "ambos";
 
   if (currentUrl.includes("portifolio")) {
     display = "portifolio";
@@ -17,13 +15,17 @@ const getDisplay = () => {
 };
 
 async function loadImages(display) {
+
+  if (!display) {
+    display = "ambos"
+  }
+
   try {
     const response = await fetch(
       `http://localhost:3000/api/imagens?display=${display}`
     );
     const images = await response.json();
 
-    console.log("Images: ", images);
     const container = document.getElementById("image-container");
 
     const fragment = document.createDocumentFragment(); // Cria um fragmento de documento para otimizar
@@ -209,6 +211,10 @@ document
 
     const form = document.querySelector("#add-image-form");
     const formData = new FormData(form);
+    
+    const tema = document.getElementById("tema-select").value;
+
+    formData.append("tema_id",  tema)
 
     // Call function to submit form data
     // Create an object with form data
@@ -274,5 +280,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const display = getDisplay();
 
-  loadImages(display || "ambos");
+  loadImages(display);
 });
